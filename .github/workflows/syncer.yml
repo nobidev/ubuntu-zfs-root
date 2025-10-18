@@ -1,0 +1,22 @@
+name: Syncer
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  packages: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/nobidev/git-syncer
+      credentials:
+         username: ${{ github.actor }}
+         password: ${{ secrets.github_token }}
+    steps:
+      - run: git-syncer
+        working-directory: /app
+        env:
+          GITHUB_UPSTREAM_REPOSITORY: halfwalker/zfs-root
+          GITHUB_TOKEN: ${{ secrets.github_token }}
